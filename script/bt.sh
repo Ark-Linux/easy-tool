@@ -9,11 +9,16 @@ readonly bt_menu_array=(
 			#"BT Disconnect" bt_disconnect\
 			#"BT Reconnect" bt_reconnect\
 			"BT Name Modify" bt_name\
-			"BT Address Modify" bt_address\
+			"BT Address Modify" bt_address_modify\
 			#"BT Track Play Pause Toggle" bt_track_play_pause_toggle\
 			#"BT Track Previous" bt_track_previous\
 			#"BT Track Next"	bt_track_next\
 			"Back" break)
+
+readonly bt_address_modify_menu_array=("Default Address" "bt_solid_address"\
+				       "Random Address" "bt_random_address"\
+				       "Back" "break")
+
 readonly addr_array=("70:c9:4e:b7:f6:54"\
 			"70:c9:4e:7f:63:7a"\
 			"70:c9:4e:5b:b3:fe"\
@@ -73,9 +78,27 @@ function bt_reconnect () {
 	clear
 }
 
-function bt_address () {
+function bt_random_address () {
 	clear
 	echo "          Address Modify"
+	echo ""
+	bt_address_str="70:c9:4e:66"
+	for((i=0; i<2; i++))
+	do
+		bt_address_str+=":`openssl rand -hex 1`"
+	done
+	adb shell setprop persist.vendor.service.bdroid.bdaddr $bt_address_str
+	echo "Setting Success"
+	getaddr=`adb shell getprop persist.vendor.service.bdroid.bdaddr`
+	echo "Current BT ADDR: ${getaddr}"
+	read -p "Any Key to Continue" p
+	clear
+}
+
+function bt_solid_address () {
+	clear
+	echo "          Address Modify"
+	echo ""
 	for ((i=0; i<${#addr_array[*]}; i++))
 	do
 		echo "$[$i+1]  ADDR$[$i+1] : ${addr_array[${i}]}"
@@ -88,10 +111,29 @@ function bt_address () {
 		echo "Enter Error"
 	fi
 	echo "Setting Success"
-	setaddr=`adb shell getprop persist.vendor.service.bdroid.bdaddr`
-	echo "Current BT ADDR: ${setaddr}"
+	getaddr=`adb shell getprop persist.vendor.service.bdroid.bdaddr`
+	echo "Current BT ADDR: ${getaddr}"
 	read -p "Any Key to Continue" p
 	clear
+}
+
+function bt_address_modify () {
+	clear
+	echo "          Address Modify"
+	echo ""
+	for ((i=0; i<$[${#bt_address_modify_menu_array[*]}/2]; i++))
+	do
+		echo "      $[$i+1]. ${bt_address_modify_menu_array[$[$i*2]]}"
+	done
+	echo ""
+	read -p "Enter Number:" menuNum
+	if [ $[${menuNum}-1] -lt $[ ${#bt_address_modify_menu_array[*]}/2 ] ]
+	then
+		${bt_address_modify_menu_array[$[$[$menuNum-1]*2 +1]]}
+	else
+		echo "Enter Error"
+	fi
+	
 }
 
 function bt_name () {
@@ -123,7 +165,10 @@ function bt_menu () {
 		echo "          BT Menu"
 		echo ""
 		currBTName=`adb shell adkcfg -f /data/adk.connectivity.bt.db read connectivity.bt.device_name`
+		getaddr=`adb shell getprop persist.vendor.service.bdroid.bdaddr`
 		echo "   Current BT Name: $currBTName"
+		echo "   Current BT Adddress: $getaddr"
+		echo ""
 		for ((i=0; i<$[${#bt_menu_array[*]}/2]; i++))
 		do
 			echo "      $[$i+1]. ${bt_menu_array[$[$i*2]]}"
