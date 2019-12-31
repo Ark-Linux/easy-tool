@@ -22,7 +22,7 @@ class Wifi(base.Base):
                 exit(0)
             sleep(1)
 
-    def wifi_connect(self):
+    def __wifi_connect(self):
         wifissid=input("\nEnter ssid:")
         wifipassw=input("Enter Password:")
         os.system('''adb shell "adk-message-send 'connectivity_wifi_onboard{}'"''')
@@ -33,7 +33,7 @@ class Wifi(base.Base):
         sleep(2)
         threading.Thread(target=self.is_wifi_stable).start()
 
-    def wifi_country_change(self):
+    def __wifi_country_change(self):
         nation_name=os.popen('adb shell adkcfg -f /data/adk.connectivity.wifi.db read connectivity.wifi.onboard_ap_country_code').read()
         print("\tCurrent Nation Name: "+nation_name)
         nation_name=input("Enter Nation Name:")
@@ -46,11 +46,11 @@ class Wifi(base.Base):
         os.system('adb reboot')
         exit(0)
 
-    def wifi_scan(self):
+    def __wifi_scan(self):
         threading.Thread(target=base.monitor).start()
         os.system('''adb shell "adk-message-send 'connectivity_wifi_scan{}'"''')
 
-    def wifi_name_refresh(self):
+    def __wifi_name_refresh(self):
         wifi_comd_str='''adb shell "cat /etc/misc/wifi/wpa_supplicant.conf | grep -w 'ssid'"'''
         wifi_ssid=os.popen(wifi_comd_str).read()
         if (len(wifi_ssid.split('"')) > 1):
@@ -58,7 +58,7 @@ class Wifi(base.Base):
 
     def run(self):
         while True:
-            self.wifi_name_refresh()
+            self.__wifi_name_refresh()
             print("\tWiFi Connection")
             print("\tConnecting: "+str(self.wifi_name))
             self.display()
@@ -66,11 +66,11 @@ class Wifi(base.Base):
             if (self.input is 0):
                 continue
             elif (self.input is 1):
-                self.wifi_connect()
+                self.__wifi_connect()
             elif (self.input is 2):
-                self.wifi_country_change()
+                self.__wifi_country_change()
             elif (self.input is 3):
-                self.wifi_scan()
+                self.__wifi_scan()
             elif (self.input is 4):
                 continue
             elif (self.input is 5):

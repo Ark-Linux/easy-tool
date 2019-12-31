@@ -8,7 +8,7 @@ class Led(base.Base):
                "Set Reverse Pattern",\
                "Back")
 
-    def list_pattern(self):
+    def __list_pattern(self):
         num=0
         list=[]
         os.system('adb pull /data/adk.led.db .')
@@ -27,7 +27,7 @@ class Led(base.Base):
         self.num=num
         database.close()
 
-    def set_normal_pattern(self):
+    def __set_normal_pattern(self):
         num_list=[]
         for i in range(self.num):
             if (self.pattern_list.__getitem__(i).__getitem__(0)[1]=="trail"\
@@ -40,10 +40,12 @@ class Led(base.Base):
         if (pattern_num in num_list):
             led_msg_str=('''adb shell "adk-message-send 'led_start_pattern{pattern:%d}'"''')%pattern_num
             os.system(led_msg_str)
+            if os.path.exists('./adk.led.db'):
+                os.remove('./adk.led.db')
         else:
             print("Enter Error")
 
-    def set_indicate_pattern(self):
+    def __set_indicate_pattern(self):
         num_list=[]
         for i in range(self.num):
             if (self.pattern_list.__getitem__(i).__getitem__(0)[1]=="direction"):
@@ -54,10 +56,12 @@ class Led(base.Base):
         if (pattern_num in num_list):
             led_msg_str=('''adb shell "adk-message-send 'led_indicate_direction_pattern{pattern:%d direction:0}'"''')%pattern_num
             os.system(led_msg_str)
+            if os.path.exists('./adk.led.db'):
+                os.remove('./adk.led.db')
         else:
             print("Enter Error")
 
-    def set_reverse_pattern(self):
+    def __set_reverse_pattern(self):
         num_list=[]
         for i in range(self.num):
             if (self.pattern_list.__getitem__(i).__getitem__(0)[1]=="reverse"):
@@ -68,6 +72,8 @@ class Led(base.Base):
         if (pattern_num in num_list):
             led_msg_str=('''adb shell "adk-message-send 'led_reverse_direction_pattern{pattern:%d direction:0}'"''')%pattern_num
             os.system(led_msg_str)
+            if os.path.exists('./adk.led.db'):
+                os.remove('./adk.led.db')
         else:
             print("Enter Error")
 
@@ -77,16 +83,17 @@ class Led(base.Base):
             print("\tSet LED Pattern\n")
             self.display()
             self.get_num()
-            self.list_pattern()
+            self.__list_pattern()
             if (self.input is 0):
                 continue
             elif (self.input is 1):
-                self.set_normal_pattern()
+                self.__set_normal_pattern()
             elif (self.input is 2):
-                self.set_indicate_pattern()
+                self.__set_indicate_pattern()
             elif (self.input is 3):
-                self.set_reverse_pattern()
+                self.__set_reverse_pattern()
             elif (self.input is 4):
                 break
             else:
                 print("error")
+

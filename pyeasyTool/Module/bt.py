@@ -9,7 +9,7 @@ class BtAddress(base.Base):
 			    "70:c9:4e:5b:b9:4e",\
 			    "70:c9:4e:7f:6d:0e")
 
-    def bt_solid_address(self):
+    def __bt_solid_address(self):
         print("\tAddress Modify\n")
         for i in range(0,len(BtAddress.addr_array),1):
             print("\t%d. %s"%(i+1,BtAddress.addr_array[i]))
@@ -24,7 +24,7 @@ class BtAddress(base.Base):
         else:
             print("Error")
 
-    def bt_random_address(self):
+    def __bt_random_address(self):
         print("\tAddress Modify\n")
         get_old_addr=os.popen('adb shell getprop persist.vendor.service.bdroid.bdaddr').read()
         bt_address_str=("70:c9:4e:"+hex(random.randint(91,183)).split('x')[1])
@@ -45,9 +45,9 @@ class BtAddress(base.Base):
             if (self.input is 0):
                 continue
             elif (self.input is 1):
-                self.bt_solid_address()
+                self.__bt_solid_address()
             elif (self.input is 2):
-                self.bt_random_address()
+                self.__bt_random_address()
             elif (self.input is 3):
                 break
             else:
@@ -62,7 +62,7 @@ class Bt(base.Base):
                                 "Random Address",\
 				                "Back")
 
-    def bt_name_modify(self):
+    def __bt_name_modify(self):
         print("\tName Modify\n")
         bt_name=input("Enter New BT Name:")
         if (len(bt_name)!=0):
@@ -81,7 +81,7 @@ class Bt(base.Base):
             if (self.input is 0):
                 continue
             elif (self.input is 1):
-                self.bt_name_modify()
+                self.__bt_name_modify()
             elif (self.input is 2):
                 BtAddress(Bt.bt_address_modify_menu_array).run()
             elif (self.input is 3):

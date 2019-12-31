@@ -5,6 +5,7 @@ import wifi
 import alexa
 import bt
 import development
+import fastboot_all
 
 class MainMenu(base.Base):
     this_version="3.0"
@@ -13,6 +14,7 @@ class MainMenu(base.Base):
                 "Alexa Onboard",\
                 "BT Modify",\
                 "Development",\
+                "Fastboot Flash",\
                 "Reboot",\
                 "Quit")
 
@@ -35,12 +37,12 @@ class MainMenu(base.Base):
             elif (self.input is 5):
                 development.Development().run()
             elif (self.input is 6):
-                os.system('adb reboot')
-                exit(0)
+                fastboot_all.FastbootImage().run()
             elif (self.input is 7):
-                #exit(0)
-                menu_num=input("Enter Number:")
-                print(len(menu_num))
+                os.system('adb reboot')
+                os._exit(0)
+            elif (self.input is 8):
+                os._exit(0)
             else:
                 print("error")
                 continue

@@ -1,5 +1,6 @@
 import subprocess
 import os
+from time import sleep
 
 class Base:
     def __init__(self,array):
@@ -24,3 +25,10 @@ def get_device_num():
 
 def monitor():
     subprocess.call('adb shell "adk-message-monitor -a"', creationflags=subprocess.CREATE_NEW_CONSOLE)
+
+def is_exist():
+    while True:
+        device_num=get_device_num()
+        if (len(device_num)==0):
+            os._exit(0)
+        sleep(1)

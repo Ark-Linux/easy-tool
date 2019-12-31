@@ -25,7 +25,7 @@ class Development():
             else:
                 self.input=0
 
-    def gpio_configuration(self):
+    def __gpio_configuration(self):
         gpio_num=input("Enter GPIO Num:")
         gpio_direction=input("Enter GPIO Direction:")
         gpio_value=input("Enter GPIO Value:")
@@ -38,7 +38,7 @@ class Development():
         gpio_str=('adb shell "echo %s > /sys/class/gpio/unexport"')%gpio_num
         os.system(gpio_str)
 
-    def mute(self):
+    def __mute(self):
         mute_value=os.popen('adb shell "cat /sys/class/gpio/gpio42/value"').read()
         if (int(mute_value) == 1):
             os.system('adb shell "echo 0 > /sys/class/gpio/gpio42/value"')
@@ -55,9 +55,9 @@ class Development():
             elif (self.input is 1):
                 threading.Thread(target=base.monitor).start()
             elif (self.input is 2):
-                self.gpio_configuration()
+                self.__gpio_configuration()
             elif (self.input is 3):
-                self.mute()
+                self.__mute()
             elif (self.input is 4):
                 break
             else:
