@@ -48,8 +48,7 @@
 <br>
 <h2>For Windows</h2>
 <ul>
-    <li>
-    <a href="https://www.python.org/downloads/windows/"><h3>1. Get Latest Python 3 Release</h3></a></li>
+    <li><h3>1. Get Latest Python 3 Release: https://www.python.org/downloads/windows/</h3></li>
 </ul>
 <br>
 <ul>
