@@ -184,4 +184,8 @@ function bt_menu () {
 	done
 }
 
-bt_menu
+if [[ -z ${1} ]];then
+	bt_menu
+else
+	adb shell setprop persist.vendor.service.bdroid.bdaddr ${addr_array[$[${1}-1]]}
+fi

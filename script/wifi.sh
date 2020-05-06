@@ -23,7 +23,7 @@ function wifi_connect () {
 	gnome-terminal -x adb shell "adk-message-send 'connectivity_wifi_onboard{}'"
 	wifiMsgStr="adk-message-send 'connectivity_wifi_connect {ssid:\"$wifissid\"password:\"$wifipassw\" homeap:true}'"
 	gnome-terminal -x adb shell "$wifiMsgStr"
-	echo "Waiting For 3s"
+	echo "------Waiting------"
 	sleep 3s
 	pid=`ps -ef | grep -w "is_wifi_stable.sh" | grep -v "grep" | awk '{print $2}'`
 	if [[ -z ${pid} ]]
@@ -84,4 +84,8 @@ function wifi_menu () {
 	done
 }
 
-wifi_menu
+if [[ -z ${1} ]];then
+	wifi_menu
+else
+	${wifi_menu_array[$[$[${1}-1]*2+1]]}	
+fi
