@@ -1,6 +1,7 @@
 #! /bin/bash
 
 readonly process_array=("bt.sh"\
+			"alexa.sh"\
 			"development.sh"\
 			"led.sh"\
 			"wifi.sh"\
