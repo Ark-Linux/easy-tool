@@ -9,7 +9,7 @@ class BtAddress(base.Base):
 			    "70:c9:4e:5b:b9:4e",\
 			    "70:c9:4e:7f:6d:0e")
 
-    def __bt_solid_address(self):
+    def bt_solid_address(self):
         print("\tAddress Modify\n")
         for i in range(0,len(BtAddress.addr_array),1):
             print("\t%d. %s"%(i+1,BtAddress.addr_array[i]))

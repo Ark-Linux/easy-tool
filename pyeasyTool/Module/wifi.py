@@ -22,7 +22,7 @@ class Wifi(base.Base):
                 exit(0)
             sleep(1)
 
-    def __wifi_connect(self):
+    def wifi_connect(self):
         wifissid=input("\nEnter ssid:")
         wifipassw=input("Enter Password:")
         os.system('''adb shell "adk-message-send 'connectivity_wifi_onboard{}'"''')

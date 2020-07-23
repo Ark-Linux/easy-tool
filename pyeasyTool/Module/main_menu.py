@@ -31,7 +31,7 @@ class MainMenu(base.Base):
             elif (self.input is 2):
                 wifi.Wifi(wifi.Wifi.wifi_menu_array).run()
             elif (self.input is 3):
-                alexa.Alexa().run()
+                alexa.Alexa(alexa.Alexa.alexa_menu_array).run()
             elif (self.input is 4):
                 bt.Bt(bt.Bt.bt_menu_array).run()
             elif (self.input is 5):

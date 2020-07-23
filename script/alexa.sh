@@ -1,8 +1,8 @@
 #! /bin/bash
 
-readonly alexa_menu_array=("Alexa Onestep Onborad" "alexa_onestep_onboard"\ 
-			"Alexa Onboard" "alexa_onboard"\
-			"Alexa Quit" "alexa_quit"\
+readonly alexa_menu_array=("Alexa Onestep Onboard" "alexa_onestep_onboard"\
+			"Alexa Activate" "alexa_activate"\
+			"Alexa InActivate" "alexa_inactivate"\
 			"Back" "break")
 
 function monitor () {
@@ -22,19 +22,19 @@ function alexa_onestep_onboard () {
 	./script/wifi.sh 1
 	sleep 1
 	monitor
-	read -p "Any key to Continue when AVSLED go GREEN twice" p
+	read -p "Any key to Continue when AVSLED flash GREEN twice" p
 	gnome-terminal -x adb shell "adk-message-monitor -a"
 	sleep 1
 	gnome-terminal -x adb shell "adk-message-send 'voiceui_start_onboarding{client:\"AVS\"}'"
 }
 
-function alexa_onboard () {
+function alexa_activate () {
 	gnome-terminal -x adb shell "adk-message-monitor -a"
 	sleep 1
 	gnome-terminal -x adb shell "adk-message-send 'voiceui_start_onboarding{client:\"AVS\"}'"
 }
 
-function alexa_quit () {
+function alexa_inactivate () {
 	gnome-terminal -x adb shell "adk-message-monitor -a"
 	sleep 1
 	gnome-terminal -x adb shell "adk-message-send 'voiceui_delete_credential {client:\"AVS\"}'"
