@@ -5,7 +5,7 @@ import threading
 from time import sleep
 import os
 
-class Alexa(base.Base, wifi.Wifi):
+class Alexa(base.Base):
     alexa_menu_array="Alexa OneStep Activate",\
                 "Alexa Activate",\
                 "Alexa InActivate",\
