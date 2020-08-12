@@ -66,7 +66,7 @@ class Wifi(base.Base):
             if (self.input is 0):
                 continue
             elif (self.input is 1):
-                self.__wifi_connect()
+                self.wifi_connect()
             elif (self.input is 2):
                 self.__wifi_country_change()
             elif (self.input is 3):
