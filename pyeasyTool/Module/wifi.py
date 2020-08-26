@@ -8,6 +8,8 @@ class Wifi(base.Base):
                 "Change Country",\
                 "Scan WiFi List",\
                 "Refresh Connection",\
+                "Wifi Message",\
+                "Wifi Name Change",\
                 "Back"
 
     wifi_name=" "
@@ -40,11 +42,10 @@ class Wifi(base.Base):
         os.system('''adb shell "adk-message-send 'connectivity_wifi_onboard{}'"''')
         sleep(1)
         wifi_msg_str=('adb shell adkcfg -f /data/adk.connectivity.wifi.db write connectivity.wifi.onboard_ap_country_code %s --ignore')\
-                    %nation_name
+                      %nation_name
         os.system(wifi_msg_str)
         sleep(1)
-        os.system('adb reboot')
-        exit(0)
+        os.system('''adb shell "adk-message-send 'connectivity_wifi_onboard{}'"''')
 
     def __wifi_scan(self):
         threading.Thread(target=base.monitor).start()
@@ -55,6 +56,22 @@ class Wifi(base.Base):
         wifi_ssid=os.popen(wifi_comd_str).read()
         if (len(wifi_ssid.split('"')) > 1):
             self.wifi_name=wifi_ssid.split('"')[1]
+
+    def wifi_message(self):
+        wifi_message=os.popen('adb shell wpa_cli status').read()
+        print("\tCurrent Nation Name: "+wifi_message)
+
+    def wifi_name_change(self):
+        wifi_name=os.popen('adb shell adkcfg -f /data/adk.connectivity.wifi.db read connectivity.wifi.onboard_ap_ssid_prefix').read()
+        print("\tCurrent wifi Name: "+wifi_name)
+        wifi_name=input("Enter wifi Name:")
+        os.system('''adb shell "adk-message-send 'connectivity_wifi_onboard{}'"''')
+        sleep(1)
+        wifi_msg_str=('adb shell adkcfg -f /data/adk.connectivity.wifi.db write connectivity.wifi.onboard_ap_ssid_prefix %s --ignore')\
+                      %wifi_name
+        os.system(wifi_msg_str)
+        sleep(1)
+        os.system('''adb shell "adk-message-send 'connectivity_wifi_onboard{}'"''')
 
     def run(self):
         while True:
@@ -74,6 +91,10 @@ class Wifi(base.Base):
             elif (self.input is 4):
                 continue
             elif (self.input is 5):
+                self.wifi_message()
+            elif (self.input is 6):
+                self.wifi_name_change()
+            elif (self.input is 7):
                 break
             else:
                 print("error")
