@@ -78,6 +78,15 @@ function bt_reconnect () {
 	clear
 }
 
+function bt_cmd_set_address () {
+#	adb shell btnvtool -b $1
+	adb shell "echo $1 > /persist/factory/bluetooth/bdaddr.txt"
+}
+
+function bt_cmd_get_address () {
+	echo $(adb shell cat /persist/factory/bluetooth/bdaddr.txt)
+}
+
 function bt_random_address () {
 	clear
 	echo "          Address Modify"
@@ -87,9 +96,13 @@ function bt_random_address () {
 	do
 		bt_address_str+=":`openssl rand -hex 1`"
 	done
-	adb shell setprop persist.vendor.service.bdroid.bdaddr $bt_address_str
-	echo "Setting Success"
-	getaddr=`adb shell getprop persist.vendor.service.bdroid.bdaddr`
+	bt_cmd_set_address $bt_address_str
+	if [ $? -eq 0 ]; then
+		echo "Setting Success"
+	else
+		echo "Setting Fail"
+	fi
+	getaddr=$(bt_cmd_get_address)
 	echo "Current BT ADDR: ${getaddr}"
 	read -p "Any Key to Continue" p
 	clear
@@ -106,12 +119,12 @@ function bt_solid_address () {
 	read -p "Enter Number:" btAddr
 	if [ $[${btAddr}-1] -lt ${#addr_array[*]} ]
 	then
-		adb shell setprop persist.vendor.service.bdroid.bdaddr ${addr_array[$[${btAddr}-1]]}
+		bt_cmd_set_address ${addr_array[$[${btAddr}-1]]}
 	else
 		echo "Enter Error"
 	fi
 	echo "Setting Success"
-	getaddr=`adb shell getprop persist.vendor.service.bdroid.bdaddr`
+	getaddr=$(bt_cmd_get_address)
 	echo "Current BT ADDR: ${getaddr}"
 	read -p "Any Key to Continue" p
 	clear
@@ -165,7 +178,7 @@ function bt_menu () {
 		echo "          BT Menu"
 		echo ""
 		currBTName=`adb shell adkcfg -f /data/adk.connectivity.bt.db read connectivity.bt.device_name`
-		getaddr=`adb shell getprop persist.vendor.service.bdroid.bdaddr`
+		getaddr=$(bt_cmd_get_address)
 		echo "   Current BT Name: $currBTName"
 		echo "   Current BT Adddress: $getaddr"
 		echo ""
@@ -187,5 +200,5 @@ function bt_menu () {
 if [[ -z ${1} ]];then
 	bt_menu
 else
-	adb shell setprop persist.vendor.service.bdroid.bdaddr ${addr_array[$[${1}-1]]}
+	adb shell btnvtool -b ${addr_array[$[${1}-1]]}
 fi
