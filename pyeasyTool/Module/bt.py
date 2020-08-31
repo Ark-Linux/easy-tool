@@ -9,16 +9,16 @@ class BtAddress(base.Base):
 			    "70:c9:4e:5b:b9:4e",\
 			    "70:c9:4e:7f:6d:0e")
 
-    def bt_solid_address(self):
+    def __bt_solid_address(self):
         print("\tAddress Modify\n")
         for i in range(0,len(BtAddress.addr_array),1):
             print("\t%d. %s"%(i+1,BtAddress.addr_array[i]))
         menuNum=eval(input("Enter Number:"))
         if ((menuNum-1) < len(BtAddress.addr_array)):
             self.input=menuNum
-            bt_msg_str=("adb shell setprop persist.vendor.service.bdroid.bdaddr "+BtAddress.addr_array[self.input-1])
+            bt_msg_str=("adb shell \"echo "+BtAddress.addr_array[self.input-1]+" > /persist/factory/bluetooth/bdaddr.txt\"")
             os.system(bt_msg_str)
-            getaddr=os.popen('adb shell getprop persist.vendor.service.bdroid.bdaddr').read()
+            getaddr=os.popen('adb shell cat /persist/factory/bluetooth/bdaddr.txt').read()
             print("\tSetting Success")
             print("\tCurrent BT ADDR: "+getaddr)
         else:
@@ -26,13 +26,13 @@ class BtAddress(base.Base):
 
     def __bt_random_address(self):
         print("\tAddress Modify\n")
-        get_old_addr=os.popen('adb shell getprop persist.vendor.service.bdroid.bdaddr').read()
+        get_old_addr=os.popen('adb shell cat /persist/factory/bluetooth/bdaddr.txt').read()
         bt_address_str=("70:c9:4e:"+hex(random.randint(91,183)).split('x')[1])
         for i in range(2):
             bt_address_str+=":"+"".join([random.choice("0123456789abcdef") for i in range(2)])
-        bt_msg_str=("adb shell setprop persist.vendor.service.bdroid.bdaddr "+bt_address_str)
+        bt_msg_str=("adb shell \"echo "+bt_address_str+" > /persist/factory/bluetooth/bdaddr.txt\"")
         os.system(bt_msg_str)
-        get_new_addr=os.popen('adb shell getprop persist.vendor.service.bdroid.bdaddr').read()
+        get_new_addr=os.popen('adb shell cat /persist/factory/bluetooth/bdaddr.txt').read()
         if (get_old_addr is not get_new_addr):
             print("\tSetting Success")
             print("\tCurrent BT ADDR: "+get_new_addr)
@@ -73,7 +73,7 @@ class Bt(base.Base):
         while True:
             print("\tBT Menu\n")
             currBTName=os.popen('adb shell adkcfg -f /data/adk.connectivity.bt.db read connectivity.bt.device_name').read()
-            getaddr=os.popen('adb shell getprop persist.vendor.service.bdroid.bdaddr').read()
+            getaddr=os.popen('adb shell cat /persist/factory/bluetooth/bdaddr.txt').read()
             print("\tCurrent BT Name:"+currBTName.split('\n')[0])
             print("\tCurrent BT Adddress:"+getaddr.split('\n')[0])
             self.display()
